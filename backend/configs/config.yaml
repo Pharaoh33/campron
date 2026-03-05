@@ -1,0 +1,16 @@
+server:
+  addr: ":8080"
+  # 用于拼接返回的文件 URL（生产可配置为真实域名）
+  base_url: "http://localhost:8080"
+  # 开发阶段可以用 *；生产建议写具体前端域名
+  cors_allow_origin: "*"
+
+storage:
+  # mp3 保存目录（可写绝对路径，也可写相对路径：相对 backend 启动目录）
+  download_dir: "E:/English/word"
+
+cambridge:
+  # Cambridge 主站（一般不需要改）
+  base_host: "https://dictionary.cambridge.org"
+  # User-Agent 伪装（减少被拦概率）
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"

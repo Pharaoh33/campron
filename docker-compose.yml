@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: campron-backend
+    ports:
+      - "8080:8080"
+    volumes:
+      # 将宿主机目录映射到容器内，保证 mp3 真正落盘到你指定的位置
+      # 你可以把 ./downloads 换成你想保存的绝对路径
+      - ./downloads:/data/downloads
+      - ./backend/configs/config.yaml:/app/configs/config.yaml
+    environment:
+      # 可选：用环境变量覆盖配置（示例）
+      # CAMPRON_STORAGE_DOWNLOAD_DIR=/data/downloads
+      - TZ=Asia/Taipei
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: campron-frontend
+    ports:
+      - "5173:80"
+    environment:
+      - TZ=Asia/Taipei
+    depends_on:
+      - backend
