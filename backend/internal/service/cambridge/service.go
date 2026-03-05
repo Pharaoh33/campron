@@ -113,8 +113,8 @@ func (s *Service) ExtractMP3URLs(html []byte, accent string) ([]MP3, error) {
 	found := map[string][]string{}
 
 	for _, m := range matches {
-		path := string(m[2])                    // /media/...
-		acc := strings.ToLower(string(m[3]))    // uk/us
+		path := string(m[2])                 // /media/...
+		acc := strings.ToLower(string(m[3])) // uk/us
 		if !want[acc] {
 			continue
 		}
@@ -174,6 +174,20 @@ func (s *Service) ExtractIPA(html []byte, accent string) map[string]string {
 	return out
 }
 
+func ensureIPASlash(s string) string {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return s
+	}
+	if !strings.HasPrefix(s, "/") {
+		s = "/" + s
+	}
+	if !strings.HasSuffix(s, "/") {
+		s = s + "/"
+	}
+	return s
+}
+
 // extractIPAForRegion：启发式解析
 // 1) 优先找 region 标记：<span class="region dreg">uk</span> 或 us
 // 2) 在其后截取一个窗口，找到第一个 ipa span（通常就是红框里的那个）
@@ -190,7 +204,8 @@ func extractIPAForRegion(html, region string) string {
 		window := html[start:end]
 		if m := reIPA.FindStringSubmatch(window); len(m) == 2 {
 			// 这里不去掉 / /，保持页面原样（例如 /ækˈtɪv.ə.ti/）
-			return strings.TrimSpace(htmlEntityDecode(m[1]))
+			ipa := strings.TrimSpace(htmlEntityDecode(m[1]))
+			return ensureIPASlash(ipa)
 		}
 	}
 
